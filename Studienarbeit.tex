@@ -1,0 +1,291 @@
+% !TeX spellcheck = de-DE
+% !TeX encoding = utf8
+% !TeX program = lualatex
+% !TeX TXS-program:compile = txs:///lualatex/[--shell-escape]
+% !BIB program = biber
+% -*- coding:utf-8 mod:LaTeX -*-
+
+% vv  scroll down to line 200 for content  vv
+
+
+\let\ifdeutsch\iftrue
+\let\ifenglisch\iffalse
+\input{pre-documentclass}
+\documentclass[
+  fontsize=12pt, % Vorgabe von Herrn Müller
+  a4paper,  % Standard format - only KOMAScript uses paper=a4 - https://tex.stackexchange.com/a/61044/9075
+  oneside,  % oneside für einseitigen Druck, twoside für buchartigen druck
+  bibliography=totoc,
+                 %idxtotoc,   %Index ins Inhaltsverzeichnis
+  %               liststotoc, %List of X ins Inhaltsverzeichnis, mit liststotocnumbered werden die Abbildungsverzeichnisse nummeriert
+  headsepline,
+  cleardoublepage=empty,
+  parskip=half,
+  %               draft    % um zu sehen, wo noch nachgebessert werden muss - wichtig, da Bindungskorrektur mit drin
+  draft=false
+]{scrbook}
+\input{config}
+%\setcounter{tocdepth}{4}
+%%%
+% EN: Syntax highligthing using pygments package
+\usepackage[chapter]{minted}
+\usepackage{titlesec}
+
+\usepackage[a4paper,%
+  head=15mm,
+  headsep=5mm,
+  bottom=25mm,
+  left=35mm,
+  right=15mm, 
+  footskip=10mm]{geometry}
+
+\addtokomafont{chapter}{\LARGE} % kleinere Schrift für Kapitelüberschriften
+
+\RedeclareSectionCommand[beforeskip=2sp, afterskip=1sp]{chapter}
+\RedeclareSectionCommands[beforeskip=1sp, afterskip=1sp]{section,subsection,subsubsection}
+\RedeclareSectionCommands[beforeskip=1sp, afterskip=1sp]{paragraph,subparagraph}
+
+% EN: line numbers within page margins
+% DE: Zeilennummern innerhalb vom Rand
+\setminted{numbersep=5pt, xleftmargin=12pt, fontsize=\huge, baselinestretch=1}
+%%%
+
+%http://www.jevon.org/wiki/Eclipse_Pygments_Style
+%\usemintedstyle{eclipse}
+%
+%\usemintedstyle{autumn}
+%\usemintedstyle{rrt}
+%\usemintedstyle{borland}
+%\usemintedstyle{friendlygrayscale}
+\usemintedstyle{friendly}
+
+%EN: compatibility of packages minted and listings with respect to the numbering of "List." caption
+%    source: https://tex.stackexchange.com/a/269510/9075
+\AtBeginEnvironment{listing}{\setcounter{listing}{\value{lstlisting}}}
+\AtEndEnvironment{listing}{\stepcounter{lstlisting}}
+%EN: We use the Listing environment to have the nice bar. So, we also have to patch the "Listing" environment for consistent counters
+\AtBeginEnvironment{Listing}{\setcounter{listing}{\value{lstlisting}}}
+\AtEndEnvironment{Listing}{\stepcounter{lstlisting}}
+
+% Abkürzungsverzeichnis
+\input{acronyms}
+
+\makeindex
+\usepackage{setspace} % Vorgabe von Herrn Müller
+\onehalfspacing
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+%	TITELSEITE
+%----------------------------------------------------------------------------------------
+% Im Anhang Credit (CC BY 4.0!) für https://www.overleaf.com/latex/templates/uppsala-university-template/jvjprsfnzgbj#.WzX_c9IzaUk
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE Studienarbeit}\\[1.5cm] % Name of your university/college
+\includegraphics[scale=.15]{logos/Logo_Hochschule_Kempten.png}\\[1cm] % Include a department/university logo - this will require the graphicx package
+\textsc{\Large Seminar Blockchain }\\[0.5cm] % Major heading such as course name
+%\vspace{2cm}
+{\Large Sommersemester 2019} % Date, change the \today to a set date if you want to be precise
+%\textsc{\large Course code}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+\vspace{2.5cm}
+{ \huge \bfseries Anwendungen von Smart Contracts }% Title of your document
+\vspace{2.5cm}
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+
+\emph{Autor:}\\
+Lukas \textsc{Willburger}\\ % Your name
+Matrikelnr. 322445 \\
+Master Informatik, 1. Semester \\ \newline 
+
+
+\emph{Seminarleitung: }\\
+Prof. Nikolaus \textsc{Steger} \\ \newline  \newline
+
+\end{minipage}\\[1cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\pagenumbering{gobble}
+%tex4ht-Konvertierung verschönern
+\iftex4ht
+  % tell tex4ht to create picures also for formulas starting with '$'
+  % WARNING: a tex4ht run now takes forever!
+  \Configure{$}{\PicMath}{\EndPicMath}{}
+  %$ % <- syntax highlighting fix for emacs
+  \Css{body {text-align:justify;}}
+
+  %conversion of .pdf to .png
+  \Configure{graphics*}
+  {pdf}
+  {\Needs{"convert \csname Gin@base\endcsname.pdf
+      \csname Gin@base\endcsname.png"}%
+    \Picture[pict]{\csname Gin@base\endcsname.png}%
+  }
+\fi
+
+%\VerbatimFootnotes %verbatim text in Fußnoten erlauben. Geht normalerweise nicht.
+\input{commands}
+
+
+%Eigener Seitenstil fuer die Kurzfassung und das Inhaltsverzeichnis
+%\deftripstyle{preamble}{}{}{}{}{}{\pagemark}
+%Doku zu deftripstyle: scrguide.pdf
+%\pagestyle{preamble}
+%\renewcommand*{\chapterpagestyle}{preamble}
+
+
+
+%Kurzfassung / abstract
+%auch im Stil vom Inhaltsverzeichnis
+%\ifdeutsch
+%  \section*{Kurzfassung}
+%\else
+%  \section*{Abstract}
+%\fi
+%
+%... Short summary of the thesis ...
+%
+%\cleardoublepage
+
+
+% BEGIN: Verzeichnisse
+
+\iftex4ht
+\else
+  \microtypesetup{protrusion=false}
+\fi
+
+%%%
+% Literaturverzeichnis ins TOC mit aufnehmen, aber nur wenn nichts anderes mehr hilft!
+% \addcontentsline{toc}{chapter}{Literaturverzeichnis}
+%
+% oder zB
+%\addcontentsline{toc}{section}{Abkürzungsverzeichnis}
+%
+%%%
+
+%Produce table of contents
+%
+%In case you have trouble with headings reaching into the page numbers, enable the following three lines.
+%Hint by http://golatex.de/inhaltsverzeichnis-schreibt-ueber-rand-t3106.html
+%
+%\makeatletter
+%\renewcommand{\@pnumwidth}{2em}
+%\makeatother
+%
+
+\tableofcontents
+
+% Bei einem ungünstigen Seitenumbruch im Inhaltsverzeichnis, kann dieser mit
+% \addtocontents{toc}{\protect\newpage}
+% an der passenden Stelle im Fließtext erzwungen werden.
+
+%Auflistung der Codezeilen
+%\listoffigures
+
+%Auflistung der Tabellen
+%\listoftables
+
+%Wird nur bei Verwendung von der lstlisting-Umgebung mit dem "caption"-Parameter benoetigt
+%\lstlistoflistings
+%ansonsten:
+%\ifdeutsch
+%  \listof{Listing}{Verzeichnis der Listings}
+%\else
+%  \listof{Listing}{List of Listings}
+%\fi
+
+%mittels \newfloat wurde die Algorithmus-Gleitumgebung definiert.
+%Mit folgendem Befehl werden alle floats dieses Typs ausgegeben
+%\ifdeutsch
+%\listof{Algorithmus}{Verzeichnis der Algorithmen}
+%\else
+  %\listof{Algorithmus}{List of Algorithms}
+%\fi
+%\listofalgorithms %Ist nur für Algorithmen, die mittels \begin{algorithm} umschlossen werden, nötig
+% Abkürzungsverzeichnis
+
+%\printnoidxglossaries
+\thispagestyle{empty}
+\iftex4ht
+\else
+  %Optischen Randausgleich und Grauwertkorrektur wieder aktivieren
+  \microtypesetup{protrusion=true}
+\fi
+
+% END: Verzeichnisse
+
+
+% Headline and footline
+\renewcommand*{\chapterpagestyle}{scrplain}
+\pagestyle{scrheadings}
+\pagestyle{scrheadings}
+\ihead[]{}
+\chead[]{}
+\ohead[]{\headmark}
+\cfoot[]{}
+\ofoot[\usekomafont{pagenumber}\thepage]{\usekomafont{pagenumber}\thepage}
+\ifoot[]{}
+
+
+
+%-----------------------------------------------------------------------------
+%
+% Main content starts here
+%
+%-----------------------------------------------------------------------------
+\pagenumbering{arabic}
+\clearpage
+\setcounter{page}{1}
+% Hier stehen gesammelt alle Inhaltskapitel drin
+\spacing{1.3}
+\input{Inhalt}
+
+\pagenumbering{Roman}
+%Literaturverzeichnis
+\printbibliography
+\appendix
+%Abbildungen, die nicht im Text auftreten
+%\include{Abbildungen} 
+\include{Anmerkungen}
+% Selbständigkeitserklärung
+\include{Erklaerung} 
+
+%\renewcommand{\appendixtocname}{Anhang}
+%\renewcommand{\appendixname}{Anhang}
+%\renewcommand{\appendixpagename}{Anhang}
+%\input{latexhints-german}
+%\input{latexhints-minted-german}
+
+\pagestyle{empty}
+\renewcommand*{\chapterpagestyle}{empty}
+\end{document}
