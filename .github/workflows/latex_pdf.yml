@@ -13,6 +13,7 @@ jobs:
         with:
           root_file: Studienarbeit.tex
           latexmk_use_lualatex: true
+          latexmk_shell_escape: true
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
